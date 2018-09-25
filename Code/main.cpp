@@ -1,6 +1,9 @@
 #include <iostream>
 #include <cmath>
 
+#include "Calculator.h"
+#include "Utils.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SGlobePoint
 {
@@ -12,9 +15,7 @@ struct SGlobePoint
     float norY;
     float norZ;
     
-    float colR;
-    float colG;
-    float colB;
+    uint8_t color[4];
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const static float RAD = 6380.0e3f;
@@ -38,12 +39,12 @@ static const float GetEdgeLength( const float angle )
     return length;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static const int GetPowerOfTwo( const int power )
+static void CalcAndReportMaxPossibleSingleGlobe()
 {
-    int mul = 1;
-    for( int i = 0; i < power; ++i )
-        mul *= 2;
-    return mul;
+    std::cout << "Max sigle patch globe" << std::endl;
+    CCalculator calculator( RAD );
+    calculator.CreateMaxPossibleSingleGlobe();
+    calculator.Report();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void CalcAndReportMaxPatch()
@@ -77,6 +78,7 @@ static void CalcAndReportMaxPatch()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 static void CalcAndReportMaxIcosahedron( const int iterCount )
 {
+    const uint64_t limit32 = 0xFFFFFFFF;
     uint64_t triaCount = 20;
     uint64_t vertCount = 12;
     uint64_t edgeCount = 30;
@@ -96,6 +98,11 @@ static void CalcAndReportMaxIcosahedron( const int iterCount )
     std::cout << "Triangles: " << triaCount << std::endl;
     std::cout << "Vertices:  " << vertCount << std::endl;
     std::cout << "Edged:     " << edgeCount << std::endl;
+    
+    //std::cout << "Vertices limit " << limit32 << std::endl;
+    
+    if( vertCount >= limit32 || triaCount >= limit32 || edgeCount >= limit32 )
+        std::cout << "32-bit limit exceeded" << std::endl; 
     std::cout << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -117,12 +124,13 @@ int main()
         std::cout << "At iteration " << iterCount << " angle is " << ang << " and length is " << len << "km." << std::endl;
         ++iterCount;
         
-        if( len < 0.1f )
+        if( len < 1.0f )
             break;
     }
     
+    CalcAndReportMaxPossibleSingleGlobe();
     CalcAndReportMaxPatch();
-    CalcAndReportMaxIcosahedron( 16 );
+    CalcAndReportMaxIcosahedron( 13 );
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
