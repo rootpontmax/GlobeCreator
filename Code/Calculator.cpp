@@ -32,7 +32,7 @@ void CCalculator::CreateMaxPossibleSingleGlobe()
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCalculator::CreateMaxPossibleSinglePatch()
 {
-    SData data();
+    SData data;
     m_data = data;
     SplitTillVertexLimit16();
 }

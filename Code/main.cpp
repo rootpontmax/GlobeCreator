@@ -4,6 +4,10 @@
 #include "Calculator.h"
 #include "Utils.h"
 
+
+
+#include "Icosahedron.h"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 struct SGlobePoint
 {
@@ -108,6 +112,11 @@ static void CalcAndReportMaxIcosahedron( const int iterCount )
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
+    CIcosahedron icosahedron;
+    icosahedron.Create( 13 );
+    icosahedron.Report();
+    icosahedron.Save( "PlanetData.bin" );
+    /*
     std::cout<<"Icosahedron calculation" << std::endl;
     
     const float arcAng = GetIcosahedronArcAngle();
@@ -131,6 +140,7 @@ int main()
     CalcAndReportMaxPossibleSingleGlobe();
     CalcAndReportMaxPatch();
     CalcAndReportMaxIcosahedron( 13 );
+    */
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
