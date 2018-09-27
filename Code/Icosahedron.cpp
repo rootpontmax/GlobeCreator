@@ -1,6 +1,7 @@
 #include "Icosahedron.h"
 #include <iostream>
 #include <set>
+#include <unordered_set>
 #include <utility>
 
 #include "Calculator.h"
@@ -55,7 +56,48 @@ void CIcosahedron::Save( const char *pFilename )
 {
     std::cout << std::endl;
     std::cout<<"Saving..." << std::endl;
-    std::cout<<"Done." << std::endl;
+    
+    const uint64_t savingStartTimeMS = GetProcessTimeMS();
+    
+    const int vertCount = static_cast< int >( m_vert.size() );
+    const int faceCount = static_cast< int >( m_face.size() );
+    
+    std::ofstream file;
+    file.open( pFilename, std::ios::out | std::ios::binary );
+    
+    // Write header
+    file.write( (char*)&vertCount, sizeof( int ) );
+    file.write( (char*)&faceCount, sizeof( int ) );
+    
+    // Save vertices information
+    for( int i = 0; i < vertCount; ++i )
+    {
+        const SVert& vert = m_vert[i];
+        file.write( (char*)&vert.x, sizeof( float ) );
+        file.write( (char*)&vert.y, sizeof( float ) );
+        file.write( (char*)&vert.z, sizeof( float ) );
+    }
+    
+    // Save faces information
+    for( int i = 0; i < faceCount; ++i )
+    {
+        const SFace& face = m_face[i];
+        
+        file.write( (char*)&face.parentID, sizeof( int ) );
+        for( int j = 0; j < 3; ++j )
+        {
+            file.write( (char*)&face.pointID[j], sizeof( int ) );
+            file.write( (char*)&face.neighbourID[j], sizeof( int ) );
+        }
+        for( int j = 0; j < 4; ++j )
+            file.write( (char*)&face.childID[j], sizeof( int ) );
+    }
+    
+    file.close();
+    
+    // Check the time
+    const uint64_t deltaTime = GetProcessTimeMS() - savingStartTimeMS;
+    std::cout<<"\tDone for " << deltaTime << " ms." << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CIcosahedron::CreateInitial()
@@ -159,6 +201,7 @@ void CIcosahedron::Split( const int startEdgeID, const int startFaceID )
     
     // For all faces add edges
     std::set< SEdge > edgeDict;
+    //std::unordered_set< SEdge, SEdgeHasher > edgeDict;
     for( int i = startFaceID; i < faceCount; ++i )
     {
         // Create edges
@@ -220,6 +263,7 @@ void CIcosahedron::Split( const int startEdgeID, const int startFaceID )
     
     // Add edges from dict to main edge storage
     for( std::set< SEdge >::iterator it = edgeDict.begin(); it != edgeDict.end(); ++it )
+    //for( std::unordered_set< SEdge, SEdgeHasher >::iterator it = edgeDict.begin(); it != edgeDict.end(); ++it )
     {
         const SEdge& edge = *it;
         m_edge.push_back( edge );
@@ -236,7 +280,7 @@ void CIcosahedron::EstablishConnectivity( const int startEdgeID, const int start
     
     // Create dictionary edge-id
     std::map< SEdge, int > dict;
-    for( size_t i = startEdgeID; i < edgeCount; ++i )
+    for( int i = startEdgeID; i < edgeCount; ++i )
         dict.insert( std::pair< SEdge, int >( m_edge[i], i ) );
     
     // Create connectivity

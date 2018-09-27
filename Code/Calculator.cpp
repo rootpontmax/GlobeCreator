@@ -59,13 +59,14 @@ void CCalculator::CreateHierarcyGlobe( const int iterationCount )
     }
     
     m_data = data;
+    const uint64_t maxEdgeCount = m_data.edgeCount;
     m_data.edgeCount = edgeCount;
     m_data.triaCount = triaCount;
     
     std::cout << "Size of data after " << iterationCount << " interation(s) consist of:" << std::endl;
-    std::cout << "\tVertices:  " << m_data.vertCount << std::endl;
-    std::cout << "\tEdges:     " << m_data.edgeCount << std::endl;
-    std::cout << "\tTriangles: " << m_data.triaCount << std::endl;
+    std::cout << "\tVertices:    " << m_data.vertCount << std::endl;
+    std::cout << "\tEdges (max): " << m_data.edgeCount << " (" << maxEdgeCount << ")" << std::endl;
+    std::cout << "\tTriangles:   " << m_data.triaCount << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCalculator::SplitTillVertexLimit16()

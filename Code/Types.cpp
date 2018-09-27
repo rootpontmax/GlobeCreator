@@ -124,6 +124,11 @@ bool operator<( const SEdge& lhs, const SEdge& rhs )
         return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+bool operator==( const SEdge& lhs, const SEdge& rhs )
+{
+    return ( lhs.idA == rhs.idA && lhs.idB == rhs.idB );
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SFace::SFace( const int idPointA, const int idPointB, const int idPointC ) :
     parentID( INVALID_ID ),
     pointID{ idPointA, idPointB, idPointC },

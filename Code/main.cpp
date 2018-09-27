@@ -114,34 +114,10 @@ int main()
 {
     CIcosahedron icosahedron;
     
-    icosahedron.Create( 9 );
+    icosahedron.Create( 8 );
     icosahedron.Report();
     icosahedron.Save( "PlanetData.bin" );
-    /*
-    std::cout<<"Icosahedron calculation" << std::endl;
     
-    const float arcAng = GetIcosahedronArcAngle();
-    const float arcLen = GetEdgeLength( arcAng ) / 1000.0f;
-    
-    std::cout << std::endl;
-    std::cout << "Angle of initial arc: " << arcAng << "° and " << arcLen << " km. " << std::endl;
-    int iterCount = 1;
-    for( ; ; )
-    {
-        const int divider = GetPowerOfTwo( iterCount );
-        const float ang = arcAng / static_cast< float >( divider );
-        const float len = GetEdgeLength( ang ) / 1000.0f;
-        std::cout << "At iteration " << iterCount << " angle is " << ang << " and length is " << len << "km." << std::endl;
-        ++iterCount;
-        
-        if( len < 1.0f )
-            break;
-    }
-    
-    CalcAndReportMaxPossibleSingleGlobe();
-    CalcAndReportMaxPatch();
-    CalcAndReportMaxIcosahedron( 13 );
-    */
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
