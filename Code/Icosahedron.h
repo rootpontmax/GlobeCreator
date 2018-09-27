@@ -15,8 +15,13 @@ public:
     void    Save( const char *pFilename );
 
 private:
+    // Функции создания
     void    CreateInitial();
-    void    EstablishConnectivity();
+    void    Split( const int startEdgeID, const int startFaceID );
+    
+    // Вспомогательные функции
+    void    EstablishConnectivity( const int startEdgeID, const int startFaceID );
+    void    FixVertOrderInFace( SFace *pFace );
     int     FindEdgeID( const std::map< SEdge, int >& dict, const SEdge& edge );
     
     std::vector< SVert >    m_vert;

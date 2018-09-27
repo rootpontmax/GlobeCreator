@@ -15,6 +15,13 @@ public:
     void CreateMaxPossibleSinglePatch();
     void Report();
     
+    void CreateHierarcyGlobe( const int iterationCount );
+    
+    // Get data
+    int GetTriaCount() const { return m_data.triaCount; }
+    int GetVertCount() const { return m_data.vertCount; }
+    int GetEdgeCount() const { return m_data.edgeCount; }
+    
     
     
     
@@ -32,6 +39,7 @@ private:
     
     void    SplitTillVertexLimit16();
     SData   SplitData( const SData& data ) const;
+    void    ReportData( const SData& data ) const;
     
     SData           m_data;
     int             m_iterCount;

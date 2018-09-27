@@ -45,6 +45,29 @@ void CCalculator::Report()
     std::cout << "\tEdges:     " << m_data.edgeCount << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+void CCalculator::CreateHierarcyGlobe( const int iterationCount )
+{
+    SData data;
+    uint64_t triaCount = data.triaCount;
+    uint64_t edgeCount = data.edgeCount;
+    
+    for( int i = 0; i < iterationCount; ++i )
+    {
+        data = SplitData( data );
+        triaCount += data.triaCount;
+        edgeCount += data.edgeCount;
+    }
+    
+    m_data = data;
+    m_data.edgeCount = edgeCount;
+    m_data.triaCount = triaCount;
+    
+    std::cout << "Size of data after " << iterationCount << " interation(s) consist of:" << std::endl;
+    std::cout << "\tVertices:  " << m_data.vertCount << std::endl;
+    std::cout << "\tEdges:     " << m_data.edgeCount << std::endl;
+    std::cout << "\tTriangles: " << m_data.triaCount << std::endl;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCalculator::SplitTillVertexLimit16()
 {
     m_iterCount = 0;
@@ -68,5 +91,13 @@ CCalculator::SData CCalculator::SplitData( const SData& data ) const
         
     SData retData( nextT, nextV, nextE );
     return retData;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CCalculator::ReportData( const SData& data ) const
+{
+    std::cout << "Data report" << std::endl;
+    std::cout << "\tVertices:  " << data.vertCount << std::endl;
+    std::cout << "\tEdges:     " << data.edgeCount << std::endl;
+    std::cout << "\tTriangles: " << data.triaCount << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

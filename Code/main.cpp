@@ -113,7 +113,8 @@ static void CalcAndReportMaxIcosahedron( const int iterCount )
 int main()
 {
     CIcosahedron icosahedron;
-    icosahedron.Create( 13 );
+    
+    icosahedron.Create( 9 );
     icosahedron.Report();
     icosahedron.Save( "PlanetData.bin" );
     /*

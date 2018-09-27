@@ -46,6 +46,39 @@ void SVert::Normalize()
     z /= length;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+SVert operator+( const SVert& lhs, const SVert& rhs )
+{
+    SVert ret;
+    ret.x = lhs.x + rhs.x;
+    ret.y = lhs.y + rhs.y;
+    ret.z = lhs.z + rhs.z;
+    return ret;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SVert operator-( const SVert& lhs, const SVert& rhs )
+{
+    SVert ret;
+    ret.x = lhs.x - rhs.x;
+    ret.y = lhs.y - rhs.y;
+    ret.z = lhs.z - rhs.z;
+    return ret;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+float Dot( const SVert& lhs, const SVert& rhs )
+{
+    const float ret = lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
+    return ret; 
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+SVert Cross( const SVert& lhs, const SVert& rhs )
+{
+    SVert ret;
+    ret.x = lhs.y * rhs.z - lhs.z * rhs.y;
+    ret.y = lhs.z * rhs.x - lhs.x * rhs.z;
+    ret.z = lhs.x * rhs.y - lhs.y * rhs.x;
+    return ret;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 SEdge::SEdge() :
     idA( INVALID_ID ),
     idB( INVALID_ID ),
@@ -71,6 +104,16 @@ void SEdge::RegisterFace( const int id )
     abort();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+int SEdge::GetNeighbour( const int thisID )
+{
+    if( thisID == faceID[0] )
+        return faceID[1];
+    else if( thisID == faceID[1] )
+        return faceID[0];
+    else
+        return INVALID_ID;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
 bool operator<( const SEdge& lhs, const SEdge& rhs )
 {
     if( lhs.idA < rhs.idA )
@@ -80,41 +123,11 @@ bool operator<( const SEdge& lhs, const SEdge& rhs )
     else
         return false;
 }
-/*
-bool SEdge::operator<( const SEdge& rhs ) const
-{
-    if( idA < rhs.idA )
-        return true;
-    else if( idA == rhs.idA )
-        return ( idB < rhs.idB );
-    else
-        return false;
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-////////////////////////////////////////////////////////////////////////////////////////////////////
-bool SEdge::operator==( const SEdge& rhs ) const
-{
-    return ( idA == rhs.idA && idB == rhs.idB );
-}
-*/
-////////////////////////////////////////////////////////////////////////////////////////////////////
-SFace::SFace( const int _regionID, const int idA, const int idB, const int idC ) :
-    regionID( _regionID ),
-    pointID{ idA, idB, idC }
+SFace::SFace( const int idPointA, const int idPointB, const int idPointC ) :
+    parentID( INVALID_ID ),
+    pointID{ idPointA, idPointB, idPointC },
+    neighbourID{ INVALID_ID, INVALID_ID, INVALID_ID },
+    childID{ INVALID_ID, INVALID_ID, INVALID_ID, INVALID_ID }
 {}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-SIcosahedron::SIcosahedron() :
-    level( 0 )
-{}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-SVert operator+( const SVert& lhs, const SVert& rhs )
-{
-    SVert res;
-    res.x = lhs.x + rhs.x;
-    res.y = lhs.y + rhs.y;
-    res.z = lhs.z + rhs.z;
-    return res;
-}
 ////////////////////////////////////////////////////////////////////////////////////////////////////

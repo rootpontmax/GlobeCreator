@@ -7,7 +7,7 @@
 #include <fstream>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-uint64_t    GetProcessTime();
+uint64_t    GetProcessTimeMS();
 size_t      GetFileSize( std::fstream& file );
 void        SaveFlt24( std::ofstream& file, const float val );
 void        SaveInt24( std::ofstream& file, const int val );

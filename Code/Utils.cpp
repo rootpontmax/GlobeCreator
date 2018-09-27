@@ -33,7 +33,7 @@ struct SInt24
     };
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-uint64_t GetProcessTime()
+uint64_t GetProcessTimeMS()
 {
     rusage ru;
     if( getrusage( RUSAGE_SELF, &ru ) != -1 )
