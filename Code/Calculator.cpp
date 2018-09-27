@@ -19,6 +19,7 @@ CCalculator::SData::SData( const uint64_t tria, const uint64_t vert, const uint6
 {}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 CCalculator::CCalculator( const float radius ) :
+    m_maxEdgeCount( 0 ),
     m_iterCount( 0 ),
     m_radius( radius )
 {}

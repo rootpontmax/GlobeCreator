@@ -21,6 +21,7 @@ public:
     int GetTriaCount() const { return m_data.triaCount; }
     int GetVertCount() const { return m_data.vertCount; }
     int GetEdgeCount() const { return m_data.edgeCount; }
+    int GetMaxEdgeCount() const { return m_maxEdgeCount; }
     
     
     
@@ -42,6 +43,7 @@ private:
     void    ReportData( const SData& data ) const;
     
     SData           m_data;
+    uint64_t        m_maxEdgeCount;
     int             m_iterCount;
     const float     m_radius;
 };

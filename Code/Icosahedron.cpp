@@ -2,6 +2,7 @@
 #include <iostream>
 #include <set>
 #include <unordered_set>
+#include <unordered_map>
 #include <utility>
 
 #include "Calculator.h"
@@ -20,6 +21,11 @@ void CIcosahedron::Create( const int levelCount )
     m_vert.reserve( calculator.GetVertCount() );
     m_edge.reserve( calculator.GetEdgeCount() );
     m_face.reserve( calculator.GetTriaCount() );
+    
+#ifdef USE_HASH_FOR_ICOSAHEDRON
+    m_edgeMap.reserve( calculator.GetMaxEdgeCount() );
+    m_edgeSet.reserve( calculator.GetMaxEdgeCount() );
+#endif
     
     // Construct initial globe
     CreateInitial();
@@ -83,14 +89,27 @@ void CIcosahedron::Save( const char *pFilename )
     {
         const SFace& face = m_face[i];
         
-        file.write( (char*)&face.parentID, sizeof( int ) );
-        for( int j = 0; j < 3; ++j )
-        {
-            file.write( (char*)&face.pointID[j], sizeof( int ) );
-            file.write( (char*)&face.neighbourID[j], sizeof( int ) );
-        }
-        for( int j = 0; j < 4; ++j )
-            file.write( (char*)&face.childID[j], sizeof( int ) );
+#ifdef USE_PACKED_SAVE
+    //SaveInt24( file, face.parentID );
+    file.write( (char*)&face.parentID, sizeof( int ) );
+        
+    for( int j = 0; j < 3; ++j )
+    {
+        SaveInt24( file, face.pointID[j] );
+        SaveInt24( file, face.neighbourID[j] );
+    }
+    for( int j = 0; j < 4; ++j )
+        file.write( (char*)&face.childID[j], sizeof( int ) );
+#else
+    file.write( (char*)&face.parentID, sizeof( int ) );
+    for( int j = 0; j < 3; ++j )
+    {
+        file.write( (char*)&face.pointID[j], sizeof( int ) );
+        file.write( (char*)&face.neighbourID[j], sizeof( int ) );
+    }
+    for( int j = 0; j < 4; ++j )
+        file.write( (char*)&face.childID[j], sizeof( int ) );
+#endif
     }
     
     file.close();
@@ -153,7 +172,7 @@ void CIcosahedron::CreateInitial()
         FixVertOrderInFace( &m_face[i] );
         
     // Assign regionID and create edges
-    std::set< SEdge > edgeDict;
+    m_edgeSet.clear();
     for( size_t i = 0; i < m_face.size(); ++i )
     {
         SFace& face = m_face[i]; 
@@ -163,12 +182,12 @@ void CIcosahedron::CreateInitial()
             const int idA = face.pointID[i];
             const int idB = face.pointID[j];
             const SEdge edge( idA, idB );
-            edgeDict.insert( edge );
+            m_edgeSet.insert( edge );
         }
     }
     
     // Add all edges to vector
-    for( std::set< SEdge >::iterator it = edgeDict.begin(); it != edgeDict.end(); ++it )
+    for( TSet::iterator it = m_edgeSet.begin(); it != m_edgeSet.end(); ++it )
     {
         const SEdge& edge = *it;
         m_edge.push_back( edge );
@@ -200,8 +219,7 @@ void CIcosahedron::Split( const int startEdgeID, const int startFaceID )
     }
     
     // For all faces add edges
-    std::set< SEdge > edgeDict;
-    //std::unordered_set< SEdge, SEdgeHasher > edgeDict;
+    m_edgeSet.clear();
     for( int i = startFaceID; i < faceCount; ++i )
     {
         // Create edges
@@ -221,18 +239,18 @@ void CIcosahedron::Split( const int startEdgeID, const int startFaceID )
         // Point M is a middle of AB
         // Point N is a middle of BC
         // Point O is a middle of CA
-        edgeDict.insert( SEdge( edgeA.idA, edgeA.idC ) );
-        edgeDict.insert( SEdge( edgeA.idB, edgeA.idC ) );
+        m_edgeSet.insert( SEdge( edgeA.idA, edgeA.idC ) );
+        m_edgeSet.insert( SEdge( edgeA.idB, edgeA.idC ) );
         
-        edgeDict.insert( SEdge( edgeB.idA, edgeB.idC ) );
-        edgeDict.insert( SEdge( edgeB.idB, edgeB.idC ) );
+        m_edgeSet.insert( SEdge( edgeB.idA, edgeB.idC ) );
+        m_edgeSet.insert( SEdge( edgeB.idB, edgeB.idC ) );
         
-        edgeDict.insert( SEdge( edgeC.idA, edgeC.idC ) );
-        edgeDict.insert( SEdge( edgeC.idB, edgeC.idC ) );
+        m_edgeSet.insert( SEdge( edgeC.idA, edgeC.idC ) );
+        m_edgeSet.insert( SEdge( edgeC.idB, edgeC.idC ) );
         
-        edgeDict.insert( SEdge( edgeA.idC, edgeB.idC ) );
-        edgeDict.insert( SEdge( edgeB.idC, edgeC.idC ) );
-        edgeDict.insert( SEdge( edgeC.idC, edgeA.idC ) );
+        m_edgeSet.insert( SEdge( edgeA.idC, edgeB.idC ) );
+        m_edgeSet.insert( SEdge( edgeB.idC, edgeC.idC ) );
+        m_edgeSet.insert( SEdge( edgeC.idC, edgeA.idC ) );
         
         // Create four new faces and establish parent-child relationship
         SFace faceA( face.pointID[0], edgeA.idC, edgeC.idC );
@@ -262,8 +280,7 @@ void CIcosahedron::Split( const int startEdgeID, const int startFaceID )
     }
     
     // Add edges from dict to main edge storage
-    for( std::set< SEdge >::iterator it = edgeDict.begin(); it != edgeDict.end(); ++it )
-    //for( std::unordered_set< SEdge, SEdgeHasher >::iterator it = edgeDict.begin(); it != edgeDict.end(); ++it )
+    for( TSet::iterator it = m_edgeSet.begin(); it != m_edgeSet.end(); ++it )
     {
         const SEdge& edge = *it;
         m_edge.push_back( edge );
@@ -279,9 +296,11 @@ void CIcosahedron::EstablishConnectivity( const int startEdgeID, const int start
     const int edgeCount = static_cast< int >( m_edge.size() );
     
     // Create dictionary edge-id
-    std::map< SEdge, int > dict;
+    //std::map< SEdge, int > dict;
+    //std::unordered_map< SEdge, int, SEdgeHasher > dict;
+    m_edgeMap.clear();
     for( int i = startEdgeID; i < edgeCount; ++i )
-        dict.insert( std::pair< SEdge, int >( m_edge[i], i ) );
+        m_edgeMap.insert( std::pair< SEdge, int >( m_edge[i], i ) );
     
     // Create connectivity
     for( int faceID = startFaceID; faceID < faceCount; ++faceID )
@@ -294,7 +313,7 @@ void CIcosahedron::EstablishConnectivity( const int startEdgeID, const int start
             assert( idB >= 0 && idB < vertCount );
             const SEdge edge( idA, idB );
             
-            const int edgeID = FindEdgeID( dict, edge );
+            const int edgeID = FindEdgeID( edge );
             assert( edgeID >= 0 && edgeID < edgeCount );
             m_face[faceID].edgeID[i] = edgeID;
             m_edge[edgeID].RegisterFace( faceID );
@@ -334,6 +353,18 @@ int CIcosahedron::FindEdgeID( const std::map< SEdge, int >& dict, const SEdge& e
 {
     std::map< SEdge, int >::const_iterator it = dict.find( edge );
     if( it == dict.end() )
+    {
+        assert( false );
+        return INVALID_ID;
+    }
+    
+    return it->second;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+int CIcosahedron::FindEdgeID( const SEdge& edge )
+{
+    TMap::const_iterator it = m_edgeMap.find( edge );
+    if( it == m_edgeMap.end() )
     {
         assert( false );
         return INVALID_ID;

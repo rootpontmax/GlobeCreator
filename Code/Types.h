@@ -46,6 +46,12 @@ struct SEdgeHasher
     std::size_t operator()( const SEdge& key ) const
     {
         return ( (std::hash<int>()(key.idA) ^ (std::hash<int>()(key.idB) << 1) ) >> 1);
+        /*
+        const size_t hashA = std::hash<uint32_t>()(key.idA); 
+        const size_t hashB = std::hash<uint32_t>()(key.idB);
+        const size_t hash = hashA | ( hashB << 32 );
+        return hash;
+        //*/
     }
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
