@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		2F659BF4214936CB0058CFCC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2F659BF3214936CB0058CFCC /* main.cpp */; };
+		FC592140215D6BD10006FEC2 /* Icosahedron.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC59213C215D6BD10006FEC2 /* Icosahedron.cpp */; };
+		FC592141215D6BD10006FEC2 /* Types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC59213D215D6BD10006FEC2 /* Types.cpp */; };
+		FC592142215D6BD10006FEC2 /* Calculator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC59213E215D6BD10006FEC2 /* Calculator.cpp */; };
+		FC592143215D6BD10006FEC2 /* Utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FC59213F215D6BD10006FEC2 /* Utils.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +29,14 @@
 /* Begin PBXFileReference section */
 		2F659BE821491DD50058CFCC /* GlobeCreator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = GlobeCreator; sourceTree = BUILT_PRODUCTS_DIR; };
 		2F659BF3214936CB0058CFCC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		FC592138215D6BD10006FEC2 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		FC592139215D6BD10006FEC2 /* Icosahedron.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Icosahedron.h; sourceTree = "<group>"; };
+		FC59213A215D6BD10006FEC2 /* Calculator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Calculator.h; sourceTree = "<group>"; };
+		FC59213B215D6BD10006FEC2 /* Types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Types.h; sourceTree = "<group>"; };
+		FC59213C215D6BD10006FEC2 /* Icosahedron.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Icosahedron.cpp; sourceTree = "<group>"; };
+		FC59213D215D6BD10006FEC2 /* Types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Types.cpp; sourceTree = "<group>"; };
+		FC59213E215D6BD10006FEC2 /* Calculator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Calculator.cpp; sourceTree = "<group>"; };
+		FC59213F215D6BD10006FEC2 /* Utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Utils.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +69,14 @@
 		2F659BF2214936CB0058CFCC /* Code */ = {
 			isa = PBXGroup;
 			children = (
+				FC59213E215D6BD10006FEC2 /* Calculator.cpp */,
+				FC59213A215D6BD10006FEC2 /* Calculator.h */,
+				FC59213C215D6BD10006FEC2 /* Icosahedron.cpp */,
+				FC592139215D6BD10006FEC2 /* Icosahedron.h */,
+				FC59213D215D6BD10006FEC2 /* Types.cpp */,
+				FC59213B215D6BD10006FEC2 /* Types.h */,
+				FC59213F215D6BD10006FEC2 /* Utils.cpp */,
+				FC592138215D6BD10006FEC2 /* Utils.h */,
 				2F659BF3214936CB0058CFCC /* main.cpp */,
 			);
 			path = Code;
@@ -118,7 +138,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FC592141215D6BD10006FEC2 /* Types.cpp in Sources */,
+				FC592142215D6BD10006FEC2 /* Calculator.cpp in Sources */,
 				2F659BF4214936CB0058CFCC /* main.cpp in Sources */,
+				FC592143215D6BD10006FEC2 /* Utils.cpp in Sources */,
+				FC592140215D6BD10006FEC2 /* Icosahedron.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
