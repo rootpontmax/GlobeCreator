@@ -11,6 +11,8 @@ class CCalculator
 public:
     CCalculator( const float radius );
     
+    void CalcResolution( const int iterationCount );
+    
     void CreateMaxPossibleSingleGlobe();
     void CreateMaxPossibleSinglePatch();
     void Report();

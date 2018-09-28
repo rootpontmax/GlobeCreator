@@ -1,6 +1,7 @@
 #include "Calculator.h"
 
 #include <iostream>
+#include <cmath>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const static float A_TO_R_COEF = 0.9510565163f;
@@ -23,6 +24,26 @@ CCalculator::CCalculator( const float radius ) :
     m_iterCount( 0 ),
     m_radius( radius )
 {}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CCalculator::CalcResolution( const int iterationCount )
+{
+    // Расчет угла оригинального икосаэдра
+    const float c = 2.0f * A_TO_R_COEF * A_TO_R_COEF;
+    const float cosinus = ( c - 1 ) / c;
+    const float angleRad = acos( cosinus );
+    float angleDeg = angleRad * 180.0f / CONST_PI;
+    
+    for( int i = 0; i < iterationCount; ++i )
+        angleDeg /= 2.0f;
+    
+    const float equator = 2.0f * CONST_PI * m_radius; 
+    const float edgeLength = equator * angleDeg / 360.0f;
+    
+    std::cout << "Edge angle after " << iterationCount << " iteration(s) is " <<
+                angleDeg << "° and length is " << edgeLength << " meters" << std::endl;
+    
+    //angleDeg
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CCalculator::CreateMaxPossibleSingleGlobe()
 {

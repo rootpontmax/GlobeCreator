@@ -1,10 +1,9 @@
 #include <iostream>
 #include <cmath>
 
+#include "Texture.h"
 #include "Calculator.h"
 #include "Utils.h"
-
-
 
 #include "Icosahedron.h"
 
@@ -21,6 +20,9 @@ struct SGlobePoint
     
     uint8_t color[4];
 };
+////////////////////////////////////////////////////////////////////////////////////////////////////
+const static float EARTH_RAD = 6380.0e3f;
+const static float SMALL_RAD = 500.0f;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const static float RAD = 6380.0e3f;
 const static float A_TO_R_COEF = 0.9510565163f;
@@ -110,14 +112,32 @@ static void CalcAndReportMaxIcosahedron( const int iterCount )
     std::cout << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-int main()
+static void CreateGeoData()
+{
+    CTexture texture;
+    texture.Resolve( "Data/SurfaceHeight.jpeg", "Data/OceanDepth.jpeg" );
+    texture.Save( "Data/TypeData.bin" );
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static void CreateIcosahedron( const int iterationCount )
 {
     CIcosahedron icosahedron;
     
-    icosahedron.Create( 8 );
+    icosahedron.Create( iterationCount );
     icosahedron.Report();
-    icosahedron.Save( "PlanetData.bin" );
+    icosahedron.Save( "Data/GridData.bin" );
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+int main()
+{
+    const int ITERATION_COUNT = 10;
+    std::cout << "Create data for planet model" << std::endl;
     
+    CCalculator calculator( EARTH_RAD );
+    calculator.CalcResolution( ITERATION_COUNT );
+    
+    CreateGeoData();
+    //CreateIcosahedron( ITERATION_COUNT );
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
