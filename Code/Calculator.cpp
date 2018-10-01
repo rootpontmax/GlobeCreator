@@ -39,8 +39,8 @@ void CCalculator::CalcResolution( const int iterationCount )
     const float equator = 2.0f * CONST_PI * m_radius; 
     const float edgeLength = equator * angleDeg / 360.0f;
     
-    std::cout << "Edge angle after " << iterationCount << " iteration(s) is " <<
-                angleDeg << "° and length is " << edgeLength << " meters" << std::endl;
+    std::cout << "After " << iterationCount << " for radius " << m_radius << "m." << std::endl;
+    std::cout << "Edge angle: " << angleDeg << "° and length is " << edgeLength << "m. " << std::endl;
     
     //angleDeg
 }

@@ -94,8 +94,7 @@ void CIcosahedron::Save( const char *pVertFilename, const char *pGridFilename )
         const SFace& face = m_face[i];
         
 #ifdef USE_PACKED_SAVE
-    //SaveInt24( file, face.parentID );
-    fileGrid.write( (char*)&face.parentID, sizeof( int ) );
+    SaveInt24( fileGrid, face.parentID );
         
     for( int j = 0; j < 3; ++j )
     {
@@ -103,7 +102,7 @@ void CIcosahedron::Save( const char *pVertFilename, const char *pGridFilename )
         SaveInt24( fileGrid, face.neighbourID[j] );
     }
     for( int j = 0; j < 4; ++j )
-        fileGrid.write( (char*)&face.childID[j], sizeof( int ) );
+        SaveInt24( fileGrid, face.childID[j] );
 #else
     fileGrid.write( (char*)&face.parentID, sizeof( int ) );
     for( int j = 0; j < 3; ++j )

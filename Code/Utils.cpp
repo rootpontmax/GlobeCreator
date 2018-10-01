@@ -1,4 +1,5 @@
 #include "Utils.h"
+#include "Types.h"
 
 #include <fstream>
 #include <iostream>
@@ -74,6 +75,15 @@ void SaveFlt24( std::ofstream& file, const float val )
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void SaveInt24( std::ofstream& file, const int val )
 {
+    if( val == INVALID_ID )
+    {
+        const SInt24 value( 0xFF, 0xFF, 0xFF );
+        file.write( (char*)&value.byte[0], sizeof( uint8_t ) );
+        file.write( (char*)&value.byte[1], sizeof( uint8_t ) );
+        file.write( (char*)&value.byte[2], sizeof( uint8_t ) );
+        return;
+    }
+    
     const SInt24 value( val );
     assert( value.byte[0] != 0xFF || value.byte[1] != 0xFF || value.byte[2] != 0xFF );  
     assert( 0 == value.byte[3] );

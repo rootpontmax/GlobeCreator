@@ -22,7 +22,7 @@ struct SGlobePoint
 };
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const static float EARTH_RAD = 6380.0e3f;
-const static float SMALL_RAD = 500.0f;
+const static float SMALL_RAD = 1000.0f;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const static float RAD = 6380.0e3f;
 const static float A_TO_R_COEF = 0.9510565163f;
@@ -130,14 +130,15 @@ static void CreateIcosahedron( const int iterationCount )
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
-    const int ITERATION_COUNT = 8;
+    const int ITERATION_COUNT = 9;
     std::cout << "Create data for planet model" << std::endl;
     
-    CCalculator calculator( EARTH_RAD );
+    //CCalculator calculator( EARTH_RAD );
+    CCalculator calculator( SMALL_RAD );
     calculator.CalcResolution( ITERATION_COUNT );
     
-    CreateGeoData();
-    //CreateIcosahedron( ITERATION_COUNT );
+    //CreateGeoData();
+    CreateIcosahedron( ITERATION_COUNT );
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
