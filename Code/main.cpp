@@ -125,19 +125,19 @@ static void CreateIcosahedron( const int iterationCount )
     
     icosahedron.Create( iterationCount );
     icosahedron.Report();
-    icosahedron.Save( "Data/GridData.bin" );
+    icosahedron.Save( "Data/VertData.bin", "Data/GridData.bin" );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
-    const int ITERATION_COUNT = 10;
+    const int ITERATION_COUNT = 8;
     std::cout << "Create data for planet model" << std::endl;
     
     CCalculator calculator( EARTH_RAD );
     calculator.CalcResolution( ITERATION_COUNT );
     
-    CreateGeoData();
-    //CreateIcosahedron( ITERATION_COUNT );
+    //CreateGeoData();
+    CreateIcosahedron( ITERATION_COUNT );
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

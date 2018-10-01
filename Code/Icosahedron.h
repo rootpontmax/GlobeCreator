@@ -20,7 +20,7 @@ class CIcosahedron
 public:
     void    Create( const int levelCount );
     void    Report();
-    void    Save( const char *pFilename );
+    void    Save( const char *pVertFilename, const char *pGridFilename );
 
 private:
 

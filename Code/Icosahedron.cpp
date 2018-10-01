@@ -58,7 +58,7 @@ void CIcosahedron::Report()
     std::cout<<"\tFace count:   " << m_face.size() << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void CIcosahedron::Save( const char *pFilename )
+void CIcosahedron::Save( const char *pVertFilename, const char *pGridFilename )
 {
     std::cout << std::endl;
     std::cout<<"Saving..." << std::endl;
@@ -68,20 +68,24 @@ void CIcosahedron::Save( const char *pFilename )
     const int vertCount = static_cast< int >( m_vert.size() );
     const int faceCount = static_cast< int >( m_face.size() );
     
-    std::ofstream file;
-    file.open( pFilename, std::ios::out | std::ios::binary );
+    std::ofstream fileVert;
+    std::ofstream fileGrid;
+    fileVert.open( pVertFilename, std::ios::out | std::ios::binary );
+    fileGrid.open( pGridFilename, std::ios::out | std::ios::binary );
     
     // Write header
-    file.write( (char*)&vertCount, sizeof( int ) );
-    file.write( (char*)&faceCount, sizeof( int ) );
+    fileVert.write( (char*)&vertCount, sizeof( int ) );
+    
+    fileGrid.write( (char*)&vertCount, sizeof( int ) );
+    fileGrid.write( (char*)&faceCount, sizeof( int ) );
     
     // Save vertices information
     for( int i = 0; i < vertCount; ++i )
     {
         const SVert& vert = m_vert[i];
-        file.write( (char*)&vert.x, sizeof( float ) );
-        file.write( (char*)&vert.y, sizeof( float ) );
-        file.write( (char*)&vert.z, sizeof( float ) );
+        fileVert.write( (char*)&vert.x, sizeof( float ) );
+        fileVert.write( (char*)&vert.y, sizeof( float ) );
+        fileVert.write( (char*)&vert.z, sizeof( float ) );
     }
     
     // Save faces information
@@ -91,28 +95,29 @@ void CIcosahedron::Save( const char *pFilename )
         
 #ifdef USE_PACKED_SAVE
     //SaveInt24( file, face.parentID );
-    file.write( (char*)&face.parentID, sizeof( int ) );
+    fileGrid.write( (char*)&face.parentID, sizeof( int ) );
         
     for( int j = 0; j < 3; ++j )
     {
-        SaveInt24( file, face.pointID[j] );
-        SaveInt24( file, face.neighbourID[j] );
+        SaveInt24( fileGrid, face.pointID[j] );
+        SaveInt24( fileGrid, face.neighbourID[j] );
     }
     for( int j = 0; j < 4; ++j )
-        file.write( (char*)&face.childID[j], sizeof( int ) );
+        fileGrid.write( (char*)&face.childID[j], sizeof( int ) );
 #else
-    file.write( (char*)&face.parentID, sizeof( int ) );
+    fileGrid.write( (char*)&face.parentID, sizeof( int ) );
     for( int j = 0; j < 3; ++j )
     {
-        file.write( (char*)&face.pointID[j], sizeof( int ) );
-        file.write( (char*)&face.neighbourID[j], sizeof( int ) );
+        fileGrid.write( (char*)&face.pointID[j], sizeof( int ) );
+        fileGrid.write( (char*)&face.neighbourID[j], sizeof( int ) );
     }
     for( int j = 0; j < 4; ++j )
-        file.write( (char*)&face.childID[j], sizeof( int ) );
+        fileGrid.write( (char*)&face.childID[j], sizeof( int ) );
 #endif
     }
     
-    file.close();
+    fileVert.close();
+    fileGrid.close();
     
     // Check the time
     const uint64_t deltaTime = GetProcessTimeMS() - savingStartTimeMS;
