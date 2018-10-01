@@ -18,9 +18,13 @@ void CIcosahedron::Create( const int levelCount )
     // Calculate size of all buffers and preallocate memory for that
     CCalculator calculator( 1.0f );
     calculator.CreateHierarcyGlobe( levelCount );
-    m_vert.reserve( calculator.GetVertCount() );
-    m_edge.reserve( calculator.GetEdgeCount() );
-    m_face.reserve( calculator.GetTriaCount() );
+    
+    const int reservedVertCount = calculator.GetVertCount(); 
+    const int reservedEdgeCount = calculator.GetEdgeCount();
+    const int reservedFaceCount = calculator.GetTriaCount();
+    m_vert.reserve( reservedVertCount );
+    m_edge.reserve( reservedEdgeCount );
+    m_face.reserve( reservedFaceCount );
     
 #ifdef USE_HASH_FOR_ICOSAHEDRON
     m_edgeMap.reserve( calculator.GetMaxEdgeCount() );
@@ -130,6 +134,7 @@ void CIcosahedron::CreateInitial()
     const float C = 0.0f;
 
     // Vertices
+    assert( m_vert.capacity() >= 12 );
     m_vert.push_back( SVert( -A,  C,  B ) ); //  0
     m_vert.push_back( SVert(  A,  C,  B ) ); //  1
     m_vert.push_back( SVert( -A,  C, -B ) ); //  2
@@ -214,10 +219,13 @@ void CIcosahedron::Split( const int startEdgeID, const int startFaceID )
         const int idB = m_edge[i].idB;
         assert( idA >= 0 && idA < vertCount );
         assert( idB >= 0 && idB < vertCount );
-        SVert middle = m_vert[idA] + m_vert[idB];
+        const SVert& vertA = m_vert[idA]; 
+        const SVert& vertB = m_vert[idB];
+        SVert middle = vertA + vertB;
         middle.Normalize();
         
         const int idC = static_cast< int >( m_vert.size() );
+        assert( m_vert.capacity() > m_vert.size() );
         m_vert.push_back( middle );
         m_edge[i].idC = idC; 
     }

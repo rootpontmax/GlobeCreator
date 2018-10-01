@@ -130,7 +130,7 @@ static void CreateIcosahedron( const int iterationCount )
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
-    const int ITERATION_COUNT = 9;
+    const int ITERATION_COUNT = 8;
     std::cout << "Create data for planet model" << std::endl;
     
     //CCalculator calculator( EARTH_RAD );
