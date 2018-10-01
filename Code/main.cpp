@@ -136,8 +136,8 @@ int main()
     CCalculator calculator( EARTH_RAD );
     calculator.CalcResolution( ITERATION_COUNT );
     
-    //CreateGeoData();
-    CreateIcosahedron( ITERATION_COUNT );
+    CreateGeoData();
+    //CreateIcosahedron( ITERATION_COUNT );
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
