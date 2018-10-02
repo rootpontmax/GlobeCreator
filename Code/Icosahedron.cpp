@@ -7,7 +7,9 @@
 
 #include "Calculator.h"
 #include "Utils.h"
-
+#include "Texture.h"
+////////////////////////////////////////////////////////////////////////////////////////////////////
+static const float RAD_TO_DEG = 180.0f / 3.1415926f;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CIcosahedron::Create( const int levelCount )
 {
@@ -62,7 +64,7 @@ void CIcosahedron::Report()
     std::cout<<"\tFace count:   " << m_face.size() << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-void CIcosahedron::Save( const char *pVertFilename, const char *pGridFilename )
+void CIcosahedron::Save( const CTexture& texture, const char *pVertFilename, const char *pGridFilename )
 {
     std::cout << std::endl;
     std::cout<<"Saving..." << std::endl;
@@ -85,12 +87,7 @@ void CIcosahedron::Save( const char *pVertFilename, const char *pGridFilename )
     
     // Save vertices information
     for( int i = 0; i < vertCount; ++i )
-    {
-        const SVert& vert = m_vert[i];
-        fileVert.write( (char*)&vert.x, sizeof( float ) );
-        fileVert.write( (char*)&vert.y, sizeof( float ) );
-        fileVert.write( (char*)&vert.z, sizeof( float ) );
-    }
+        SaveVert( texture, fileVert, m_vert[i] );
     
     // Save faces information
     for( int i = 0; i < faceCount; ++i )
@@ -383,5 +380,40 @@ int CIcosahedron::FindEdgeID( const SEdge& edge )
     }
     
     return it->second;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+void CIcosahedron::SaveVert( const CTexture& texture, std::ofstream& file, const SVert& vert )
+{
+    // Определение координат
+    const SVert horizontal( vert.x, 0.0f, vert.z );
+    const SVert normal = vert.GetNormalazed();
+    const SVert equator = horizontal.GetNormalazed();
+
+    
+    const float angleV = 90.0f - acos( normal.y ) * RAD_TO_DEG;
+    float angleH = acos( equator.x ) * RAD_TO_DEG;
+    
+    // Избежать NaN
+    if( angleH != angleH )
+        angleH = 0.0f;
+        
+    const float angleLat = angleV;
+    float angleLon = ( equator.z >= 0.0f ) ? ( 180.0f - angleH ) : ( 180.0f + angleH );
+        
+    // Correct longitude angle
+    if( angleLon < 0.0f )
+        angleLon += 360.0f;
+        
+    assert( angleLat >= -90.0f & angleLat <= 90.0f );
+    assert( angleLon >= 0.0f & angleLon <= 360.0f );
+    
+    // Получение цвета
+    const uint32_t color = texture.GetColor( angleLat, angleLon );
+        
+    // Сохранение
+    file.write( (char*)&vert.x, sizeof( float ) );
+    file.write( (char*)&vert.y, sizeof( float ) );
+    file.write( (char*)&vert.z, sizeof( float ) );
+    file.write( (char*)&color, sizeof( uint32_t ) );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -12,15 +12,15 @@
 #include <unordered_map>
 #include <unordered_set>
 
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+class CTexture;
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 class CIcosahedron
 {
 public:
     void    Create( const int levelCount );
     void    Report();
-    void    Save( const char *pVertFilename, const char *pGridFilename );
+    void    Save( const CTexture& texture, const char *pVertFilename, const char *pGridFilename );
 
 private:
 
@@ -44,6 +44,9 @@ private:
     void    FixVertOrderInFace( SFace *pFace );
     int     FindEdgeID( const std::map< SEdge, int >& dict, const SEdge& edge );
     int     FindEdgeID( const SEdge& edge );
+    
+    // Вспомогательные функции сохранения
+    void    SaveVert( const CTexture& texture, std::ofstream& file, const SVert& vert );
     
     
     // Основное хранилище

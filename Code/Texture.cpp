@@ -45,15 +45,6 @@ void CTexture::Save( const char *pFilename )
     const size_t size = imageW * imageH;
     std::vector< uint8_t > tempBuffer;
     tempBuffer.resize( size );
-    /*
-    for( size_t y = 0; y < imageH; ++y )
-        for( size_t x = 0; x < imageW; ++x )
-        {
-            const size_t offset = y * imageW + x;            
-            tempBuffer[offset] = m_buffer[offset].value;
-        }
-        */
-        
         
     for( size_t i = 0; i < size; ++i )
         tempBuffer[i] = m_buffer[i].value;
@@ -65,10 +56,36 @@ void CTexture::Save( const char *pFilename )
     const int outChannels = 1;
     const uint8_t *pOut = &tempBuffer[0];
     
-    const bool res = jpge::compress_image_to_jpeg_file( "Data/Conflicted.jpeg", imageW, imageH, outChannels, pOut, outParam );
+    const bool res = jpge::compress_image_to_jpeg_file( "Data/Buffer.jpeg", imageW, imageH, outChannels, pOut, outParam );
     assert( res );
     std::cout << "Save\n";
     // end of CRAP
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////
+uint32_t CTexture::GetColor( const float angleLat, const float angleLon ) const
+{
+    const int sizeX = m_bufferS.imageW;
+    const int sizeY = m_bufferS.imageH;
+    const float coefLat = ( angleLat + 90.0f ) / 180.0f;
+    const float coefLon = angleLon / 360.0f;
+    const int x = static_cast< int >( coefLon * ( sizeX - 1 ) );
+    const int y = ( m_bufferS.imageH - 1 ) - static_cast< int >( coefLat * ( sizeY - 1 ) );
+    
+    assert( x >= 0 && x < sizeX );
+    assert( y >= 0 && y < sizeY );
+    
+    const size_t offset = y * sizeX + x;
+    const uint8_t col = m_buffer[offset].value;
+    
+    const uint32_t colR = col;
+    const uint32_t colG = col << 8;
+    const uint32_t colB = col << 16;
+    const uint32_t color = 0xFF000000 |colB | colG | colR;
+    
+    //.....................0xAABBGGRR
+    //const uint32_t color = 0x00FF0000;
+    
+    return color;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 void CTexture::Load( const char *pSurfaceFilename, const char *pOceanFilename )

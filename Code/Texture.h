@@ -9,8 +9,9 @@
 class CTexture
 {
 public:
-    void    Resolve( const char *pSurfaceFilename, const char *pOceanFilename );
-    void    Save( const char *pFilename );
+    void        Resolve( const char *pSurfaceFilename, const char *pOceanFilename );
+    void        Save( const char *pFilename );
+    uint32_t    GetColor( const float angleLat, const float angleLon ) const;
     
 private:
 

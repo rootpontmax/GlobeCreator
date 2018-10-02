@@ -112,20 +112,21 @@ static void CalcAndReportMaxIcosahedron( const int iterCount )
     std::cout << std::endl;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static void CreateGeoData()
+static void CreateGeoData( CTexture *pTexture )
 {
-    CTexture texture;
-    texture.Resolve( "Data/SurfaceHeight.jpeg", "Data/OceanDepth.jpeg" );
-    texture.Save( "Data/TypeData.bin" );
+    assert( pTexture );
+    
+    pTexture->Resolve( "Data/SurfaceHeight.jpeg", "Data/OceanDepth.jpeg" );
+    pTexture->Save( "Data/TypeData.bin" );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-static void CreateIcosahedron( const int iterationCount )
+static void CreateIcosahedron( const CTexture& texture, const int iterationCount )
 {
     CIcosahedron icosahedron;
     
     icosahedron.Create( iterationCount );
     icosahedron.Report();
-    icosahedron.Save( "Data/VertData.bin", "Data/GridData.bin" );
+    icosahedron.Save( texture, "Data/VertData.bin", "Data/GridData.bin" );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
@@ -133,12 +134,14 @@ int main()
     const int ITERATION_COUNT = 8;
     std::cout << "Create data for planet model" << std::endl;
     
+    CTexture texture;
+    
     //CCalculator calculator( EARTH_RAD );
     CCalculator calculator( SMALL_RAD );
     calculator.CalcResolution( ITERATION_COUNT );
     
-    //CreateGeoData();
-    CreateIcosahedron( ITERATION_COUNT );
+    CreateGeoData( &texture );
+    CreateIcosahedron( texture, ITERATION_COUNT );
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
