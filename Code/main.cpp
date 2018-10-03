@@ -116,7 +116,7 @@ static void CreateGeoData( CTexture *pTexture )
 {
     assert( pTexture );
     
-    pTexture->Resolve( "Data/SurfaceHeight.jpeg", "Data/OceanDepth.jpeg" );
+    pTexture->Resolve( "Data/SurfaceHeight.jpeg", "Data/OceanDepth.jpeg", "Data/EarthColor.jpeg" );
     pTexture->Save( "Data/TypeData.bin" );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -409,11 +409,17 @@ void CIcosahedron::SaveVert( const CTexture& texture, std::ofstream& file, const
     
     // Получение цвета
     const uint32_t color = texture.GetColor( angleLat, angleLon );
+    const float height = texture.GetHeight( angleLat, angleLon );
         
     // Сохранение
     file.write( (char*)&vert.x, sizeof( float ) );
     file.write( (char*)&vert.y, sizeof( float ) );
     file.write( (char*)&vert.z, sizeof( float ) );
     file.write( (char*)&color, sizeof( uint32_t ) );
+    
+    // Эта часть должна сохранить углы и отклонение радиуса
+    file.write( (char*)&angleLat, sizeof( float ) );
+    file.write( (char*)&angleLon, sizeof( float ) );
+    file.write( (char*)&height, sizeof( float ) );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
