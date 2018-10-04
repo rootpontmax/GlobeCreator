@@ -31,7 +31,8 @@ CTexture::SData::SData() :
     colR( 0 ),
     colG( 0 ),
     colB( 0 ),
-    value( 0 ),
+    valueS( 0 ),
+    valueO( 0 ),
     type( TYPE_NOT_ASSIGN )
 {}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -191,29 +192,37 @@ void CTexture::ResolveData()
             if( colS == colO )
             {
                 assert( colS >= 0xF7 );
+                m_buffer[offset].valueS = colS;
+                m_buffer[offset].valueO = colO;
                 m_buffer[offset].type = TYPE_UNKNOWN;
                 ++unknownCount;
                 
                 // CRAP - поставим тип Surface с нулевой глубиной
-                m_buffer[offset].height = 0.0f;
-                m_buffer[offset].value = 0x00;
-                m_buffer[offset].type = TYPE_SURFACE;
+                //m_buffer[offset].height = 0.0f;
+                //m_buffer[offset].value = 0x00;
+                //m_buffer[offset].type = TYPE_SURFACE;
                 // end of CRAP
                 
                 // CRAP - тестирование конфликтных пикселей
                 //m_buffer[offset].value = 0x00;
                 // end of CRAP
+                
+                // CRAP
+                m_buffer[offset].height = 1.0f;
+                // end of CRAP
             }
             
+            
+            /*
             else if( colS == 0xFF )
             {
-                m_buffer[offset].value = colO;
+                m_buffer[offset].valueO = colO;
                 m_buffer[offset].type = TYPE_WATER;
                 m_buffer[offset].height = -( static_cast< float >( colO ) / 255.0f );
             }
             else if( colO == 0xFF )
             {
-                m_buffer[offset].value = colS;
+                m_buffer[offset].valueS = colS;
                 m_buffer[offset].type = TYPE_SURFACE;
                 m_buffer[offset].height = static_cast< float >( colS ) / 255.0f;
                 
@@ -221,6 +230,7 @@ void CTexture::ResolveData()
                 //m_buffer[offset].value = 0xFF;
                 // end of CRAP
             }
+            //*/
             ++totalCount;
         }
         

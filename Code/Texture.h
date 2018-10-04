@@ -48,7 +48,8 @@ private:
         uint8_t colR;
         uint8_t colG;
         uint8_t colB;
-        uint8_t value;
+        uint8_t valueS;
+        uint8_t valueO;
         uint8_t type;
     };
     

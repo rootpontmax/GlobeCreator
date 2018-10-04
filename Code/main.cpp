@@ -141,7 +141,7 @@ int main()
     calculator.CalcResolution( ITERATION_COUNT );
     
     CreateGeoData( &texture );
-    CreateIcosahedron( texture, ITERATION_COUNT );
+    //CreateIcosahedron( texture, ITERATION_COUNT );
     return 0;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
